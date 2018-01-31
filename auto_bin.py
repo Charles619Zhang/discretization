@@ -51,28 +51,6 @@ def bin_woe_num(var,varname,y,n_good,n_bad,class_num = 50):
             binned.loc[idx]=bin_arr[i]
             i += 1
     bin_list = set(binned[varname])
-    # merge variable and y to get woe
-#    var_gbflag = pd.concat([binned,y],1)
-#    woe_list = []
-#    str_to_print = ''
-#    voi_list = []
-#    for binn in bin_list:
-#        #calculate woe
-#        gb_list = var_gbflag.loc[var_gbflag[varname]==binn]['gbflag']
-#        n_good_in_bin = len(gb_list.loc[gb_list == 1])
-#        n_bad_in_bin = len(gb_list.loc[gb_list == 0])
-#        p_good = n_good and n_good_in_bin / n_good or 0
-#        p_bad = n_bad and n_bad_in_bin / n_bad or 0
-#        woe = np.log((p_good and p_good or 0.000001)/(p_bad and p_bad or 0.000001))
-#        woe_list.append(woe)
-#        #calculate voi
-#        voi = (p_good - p_bad) * woe
-#        voi_list.append(voi)
-#    voi_sum = sum(voi_list)
-#    str_to_print = 'VOI of ' + varname + ' is: ' + str(round(voi_sum,6))
-#    print(str_to_print)
-#    woed = binned.replace(bin_list, woe_list)
-#    return [binned, woed, voi_sum]
     return [binned]
     
 #for string columns, calculate the bin and woe value
@@ -80,27 +58,6 @@ def bin_woe_str(var,varname,y,n_good,n_bad):
     var_list = set(var[varname])
     bin_list = np.arange(0,len(var_list))
     binned = var.replace(var_list, bin_list)
-#    woe_list = []
-#    var_gbflag = pd.concat([binned,y],1)
-#    str_to_print = ''
-#    voi_list = []
-#    for binn in bin_list:
-#        #calculate woe
-#        gb_list = var_gbflag.loc[var_gbflag[varname]==binn]['gbflag']
-#        n_good_in_bin = len(gb_list.loc[gb_list == 1])
-#        n_bad_in_bin = len(gb_list.loc[gb_list == 0])
-#        p_good = n_good and n_good_in_bin / n_good or 0
-#        p_bad = n_bad and n_bad_in_bin / n_bad or 0
-#        woe = np.log((p_good and p_good or 0.000001)/(p_bad and p_bad or 0.000001))
-#        woe_list.append(woe)
-#        #calculate voi
-#        voi = (p_good - p_bad) * woe
-#        voi_list.append(voi)
-#    voi_sum = sum(voi_list)
-#    str_to_print = 'VOI of ' + varname + ' is: ' + str(round(voi_sum,6))
-#    print(str_to_print)
-#    woed = binned.replace(bin_list, woe_list)
-#    return [binned, woed, voi_sum]
     return [binned]
     
 X_bin = pd.DataFrame()
@@ -127,32 +84,9 @@ for varname in X.columns:
         else:
             #print('N/A! N/A!')
             pass
-#
-#woe_gbflag = pd.concat([X_woe,y],1)
-#woe_gbflag.to_csv(output_file_path)
+
 X_bin.to_csv(r'C:\Users\56999\Documents\Tencent Files\569994498\FileRecv\logit_bin.csv')
 
 #print time of execution
 elapsed = (time.clock() - start)
 print("Time used:",elapsed)
-
-##sort the table of voi to get the first 65%
-#X_voi_sorted = X_voi.sort_values('voi',ascending = 0).reset_index(drop = 1)
-#X_voi_selected = X_voi_sorted[0:int(len(X_voi_sorted)*0.65)]
-#X_woe_voi_selected = X_woe[X_voi_selected.iloc[:,0]].copy()
-#print(str(len(X_woe_voi_selected.columns))+" features are selected by first 65% voi")
-#woe_gbflag = pd.concat([X_woe_voi_selected,y],1)
-#woe_gbflag.to_csv(output_file_path)
-#
-##select features by packages provided by sk learn
-#from sklearn import feature_selection as fs
-#
-#chi_score = fs.chi2(X_woe+100,y)
-## select function in sk learn doesn't check p values of chi square test
-#X_woe_chi_selected = fs.SelectPercentile(fs.chi2, 65).fit_transform(X_woe+100,y)
-#X_woe_chi_selected = X_woe_chi_selected - 100
-#
-#X_woe_variance_selected = fs.VarianceThreshold(threshold=(0.05)).fit_transform(X_woe)
-#print(str(len(X_woe_variance_selected[0]))+" features are selected by variance >= 0.05")
-#
-##RFE should be set with the chosen estimator
